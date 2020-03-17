@@ -67,6 +67,13 @@ After we pass in the credential to initialize an instance of ADLSBackup, we can 
 
 In the above example, the directory **/sampledirectory** may or may not be created on the ADLS instance at the time when the program runs.  If the directory is not created, the program will automatically create the folder before transferring the file.
 
+## Linux environment usage
+
+The following command invoke the python script to transfer a file from local machine to remote Azure DataLake Storage Gen 1 instance.
+
+
+    python backup.py <local_file_path> <remote_folder_path> 
+
 
 
 
