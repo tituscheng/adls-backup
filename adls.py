@@ -23,6 +23,10 @@ class ADLSCredential:
             raise Exception("File not found error")
 
     def is_valid(self):
+        """
+        Checkes whether any of the required field in the json file is empty string
+        return: valid boolean
+        """
         valid = True
         for field in self.__dict__:
             if len(self.__dict__[field]) == 0:
@@ -57,6 +61,9 @@ class ADLSBackup:
                                              store_name=adlscred.adls_account_name)
 
     def make_folder(self, folderpath):
+        """
+        Creates the folderpath on ADLS if it doesn't already exists
+        """
         if folderpath is None:
             raise Exception("folderpath is nil")
         if not isinstance(folderpath, pathlib.Path):
@@ -81,15 +88,18 @@ class ADLSBackup:
 
     def __pass_final_check(self, localpath, remotepath, filesize):
         """
-        Final check if file has been uploaded to ADLS Gen1
+        Final check to see if local file has been uploaded to ADLS Gen1 instance
+        Note: removed filesize check temporarily
         local_size: file size of local file in bytes
         return: boolean
         """
         adls_file_path = str(remotepath.joinpath(localpath.name))
-
         return self.client.exists(adls_file_path)
 
     def __is_valid_path(self, path):
+        """
+        Checks if the given path is of type Path
+        """
         if path is None:
             return False
         elif not isinstance(path, pathlib.Path):
@@ -98,6 +108,10 @@ class ADLSBackup:
             return True
 
     def has_remote_folder(self, folderpath):
+        """
+        Checks if the given folderpath already exists on ADLS
+        return: boolean 
+        """
         return self.client.exists(str(folderpath))
 
     def transfer(self, local_filepath, remote_folderpath):
@@ -126,6 +140,10 @@ class ADLSBackup:
             print("{filename} already exists in datalake!".format(filename=local_filepath.name))
 
         else: 
+            """
+            If the size of the file to be transferred becomes too large, may need to modify 
+            local_file_size to transfer the file in smaller chunks 
+            """
             local_file_size = path.getsize(str(local_filepath))
             should_overwrite = True
 
